@@ -1,0 +1,79 @@
+#include <iostream>
+#include <sphinxbase/ad.h>
+#include <sphinxbase/err.h>
+#include <pocketsphinx.h>
+#include <fstream>
+
+int main() {
+  // Welcome message
+  std::cout << "Hello! I am Ananya, an artificial intelligence program designed to assist you with tasks." << std::endl;
+
+  // Initialize the pocketsphinx decoder
+  ps_decoder_t *ps = ps_init(config);
+  
+  // Start listening for speech
+  ad_start_rec(ad);
+  
+  // Loop indefinitely
+  while (true) {
+    // Check for speech
+    int16 adbuf[2048];
+    int32 k;
+    k = ad_read(ad, adbuf, 2048);
+    
+    // If speech is detected, process it
+    if (k > 0) {
+      // Process the speech
+      ps_process_raw(ps, adbuf, k, FALSE, FALSE);
+      
+      // Get the recognized text
+      char const *hyp = ps_get_hyp(ps, NULL);
+      
+      // Check the recognized text and perform the appropriate action
+      if (strcmp(hyp, "open browser") == 0) {
+        // Open the default web browser
+        system("open -a 'Google Chrome'");
+      } else if (strcmp(hyp, "play music") == 0) {
+        // Open the default music player
+        system("open -a 'iTunes'");
+      } else if (strcmp(hyp, "integrate devices") == 0) {
+        // Integrate devices
+        std::cout << "Integrating devices..." << std::endl;
+        // Add code here to integrate devices
+      } else if (strcmp(hyp, "sync devices") == 0) {
+        // Sync devices
+        std::cout << "Syncing devices..." << std::endl;
+        // Add code here to sync devices
+      } else if (strcmp(hyp, "transfer data") == 0) {
+        // Transfer data
+        std::cout << "Transferring data..." << std::endl;
+        // Add code here to transfer data
+      } else if (strcmp(hyp, "edit code") == 0) {
+        // Edit the code
+        std::cout << "Editing code..." << std::endl;
+        
+        // Set the file path of the code file
+        std::string filePath = "C:\\your\\code\\path\\your-code.cpp";
+
+        // Open the code file
+        std::ofstream codeFile(filePath.c_str(), std::ios::app);
+
+        // Prompt the user for the code to be added
+        std::cout << "Enter the code you would like to add: ";
+        std::string code;
+        std::getline(std::cin, code);
+
+        // Add the code to the file
+        codeFile << code;
+
+        // Close the file
+        codeFile.close();
+      }
+    }
+  }
+  
+  // Clean up
+  ad_close(ad);
+  ps_free(ps);
+  return 0;
+}
